@@ -1,0 +1,49 @@
+{
+  "run_id": "9c9e1b6f",
+  "agent": "agent-3-test-author",
+  "generated_at": "2026-04-16T21:30:00Z",
+  "total_requests": 69,
+  "by_scenario_type": {
+    "happy_path": 14,
+    "negative": 6,
+    "edge": 4,
+    "security": 38,
+    "performance": 5,
+    "contract": 2
+  },
+  "endpoints_covered": 41,
+  "endpoints_total": 41,
+  "endpoints_not_covered_reason": "None - full 41/41 coverage achieved",
+  "framework": "Postman v2.1 (Newman-runnable)",
+  "newman_command": "newman run postman_collection.json -e postman_environment.json --reporters cli,json --reporter-json-export results.json",
+  "artifacts": [
+    "postman_collection.json",
+    "postman_environment.json",
+    "test_data_fixtures.json"
+  ],
+  "idempotency_check": {
+    "input_hash_source": "9c9e1b6f+postman",
+    "sha256": "4409a64ac7b3abb2543e5c5b773c35f879dcddf2a1bb38ac5c667ee194594343"
+  },
+  "quality_notes": [
+    "All test data uses synthetic values only - zero real PII",
+    "All assertions are deterministic with explicit SLA thresholds",
+    "Security tests document findings via console.log for audit trail",
+    "Full 41/41 endpoint coverage achieved - 7 previously uncovered endpoints now included",
+    "New scenarios SCN-063 to SCN-069 cover EP-008, EP-011, EP-014, EP-017, EP-020, EP-026, EP-040"
+  ],
+  "delta_from_previous_run": {
+    "previous_run_id": "aef99609",
+    "previous_endpoints_covered": 34,
+    "new_scenarios_added": 7,
+    "newly_covered_endpoints": [
+      "EP-008 GET /comments/:id",
+      "EP-011 PATCH /comments/:id",
+      "EP-014 GET /albums/:id",
+      "EP-017 PATCH /albums/:id",
+      "EP-020 GET /photos/:id",
+      "EP-026 GET /todos/:id",
+      "EP-040 GET /users/:id/albums"
+    ]
+  }
+}

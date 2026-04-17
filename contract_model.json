@@ -1,0 +1,57 @@
+{
+  "run_id": "RBA-9",
+  "generated_at": "2026-04-16T14:45:00Z",
+  "domain": "generic",
+  "api_base_url": "https://jsonplaceholder.typicode.com",
+  "total_endpoints": 41,
+  "resources": ["posts", "comments", "albums", "photos", "todos", "users"],
+  "endpoints": [
+    {"id": "EP-001", "method": "GET", "path": "/posts", "resource": "posts", "type": "list", "auth": "none", "response_schema": "post[]"},
+    {"id": "EP-002", "method": "GET", "path": "/posts/:id", "resource": "posts", "type": "get", "auth": "none", "response_schema": "post"},
+    {"id": "EP-003", "method": "POST", "path": "/posts", "resource": "posts", "type": "create", "auth": "none", "request_body": {"userId": "integer", "title": "string", "body": "string"}, "response_schema": "post"},
+    {"id": "EP-004", "method": "PUT", "path": "/posts/:id", "resource": "posts", "type": "replace", "auth": "none", "request_body": {"userId": "integer", "title": "string", "body": "string"}, "response_schema": "post"},
+    {"id": "EP-005", "method": "PATCH", "path": "/posts/:id", "resource": "posts", "type": "update", "auth": "none", "request_body": "partial<post>", "response_schema": "post"},
+    {"id": "EP-006", "method": "DELETE", "path": "/posts/:id", "resource": "posts", "type": "delete", "auth": "none", "response_schema": "{}"},
+
+    {"id": "EP-007", "method": "GET", "path": "/comments", "resource": "comments", "type": "list", "auth": "none", "response_schema": "comment[]"},
+    {"id": "EP-008", "method": "GET", "path": "/comments/:id", "resource": "comments", "type": "get", "auth": "none", "response_schema": "comment"},
+    {"id": "EP-009", "method": "POST", "path": "/comments", "resource": "comments", "type": "create", "auth": "none", "request_body": {"postId": "integer", "name": "string", "email": "string", "body": "string"}, "response_schema": "comment"},
+    {"id": "EP-010", "method": "PUT", "path": "/comments/:id", "resource": "comments", "type": "replace", "auth": "none", "request_body": {"postId": "integer", "name": "string", "email": "string", "body": "string"}, "response_schema": "comment"},
+    {"id": "EP-011", "method": "PATCH", "path": "/comments/:id", "resource": "comments", "type": "update", "auth": "none", "request_body": "partial<comment>", "response_schema": "comment"},
+    {"id": "EP-012", "method": "DELETE", "path": "/comments/:id", "resource": "comments", "type": "delete", "auth": "none", "response_schema": "{}"},
+
+    {"id": "EP-013", "method": "GET", "path": "/albums", "resource": "albums", "type": "list", "auth": "none", "response_schema": "album[]"},
+    {"id": "EP-014", "method": "GET", "path": "/albums/:id", "resource": "albums", "type": "get", "auth": "none", "response_schema": "album"},
+    {"id": "EP-015", "method": "POST", "path": "/albums", "resource": "albums", "type": "create", "auth": "none", "request_body": {"userId": "integer", "title": "string"}, "response_schema": "album"},
+    {"id": "EP-016", "method": "PUT", "path": "/albums/:id", "resource": "albums", "type": "replace", "auth": "none", "request_body": {"userId": "integer", "title": "string"}, "response_schema": "album"},
+    {"id": "EP-017", "method": "PATCH", "path": "/albums/:id", "resource": "albums", "type": "update", "auth": "none", "request_body": "partial<album>", "response_schema": "album"},
+    {"id": "EP-018", "method": "DELETE", "path": "/albums/:id", "resource": "albums", "type": "delete", "auth": "none", "response_schema": "{}"},
+
+    {"id": "EP-019", "method": "GET", "path": "/photos", "resource": "photos", "type": "list", "auth": "none", "response_schema": "photo[]"},
+    {"id": "EP-020", "method": "GET", "path": "/photos/:id", "resource": "photos", "type": "get", "auth": "none", "response_schema": "photo"},
+    {"id": "EP-021", "method": "POST", "path": "/photos", "resource": "photos", "type": "create", "auth": "none", "request_body": {"albumId": "integer", "title": "string", "url": "string", "thumbnailUrl": "string"}, "response_schema": "photo"},
+    {"id": "EP-022", "method": "PUT", "path": "/photos/:id", "resource": "photos", "type": "replace", "auth": "none", "request_body": {"albumId": "integer", "title": "string", "url": "string", "thumbnailUrl": "string"}, "response_schema": "photo"},
+    {"id": "EP-023", "method": "PATCH", "path": "/photos/:id", "resource": "photos", "type": "update", "auth": "none", "request_body": "partial<photo>", "response_schema": "photo"},
+    {"id": "EP-024", "method": "DELETE", "path": "/photos/:id", "resource": "photos", "type": "delete", "auth": "none", "response_schema": "{}"},
+
+    {"id": "EP-025", "method": "GET", "path": "/todos", "resource": "todos", "type": "list", "auth": "none", "response_schema": "todo[]"},
+    {"id": "EP-026", "method": "GET", "path": "/todos/:id", "resource": "todos", "type": "get", "auth": "none", "response_schema": "todo"},
+    {"id": "EP-027", "method": "POST", "path": "/todos", "resource": "todos", "type": "create", "auth": "none", "request_body": {"userId": "integer", "title": "string", "completed": "boolean"}, "response_schema": "todo"},
+    {"id": "EP-028", "method": "PUT", "path": "/todos/:id", "resource": "todos", "type": "replace", "auth": "none", "request_body": {"userId": "integer", "title": "string", "completed": "boolean"}, "response_schema": "todo"},
+    {"id": "EP-029", "method": "PATCH", "path": "/todos/:id", "resource": "todos", "type": "update", "auth": "none", "request_body": "partial<todo>", "response_schema": "todo"},
+    {"id": "EP-030", "method": "DELETE", "path": "/todos/:id", "resource": "todos", "type": "delete", "auth": "none", "response_schema": "{}"},
+
+    {"id": "EP-031", "method": "GET", "path": "/users", "resource": "users", "type": "list", "auth": "none", "response_schema": "user[]"},
+    {"id": "EP-032", "method": "GET", "path": "/users/:id", "resource": "users", "type": "get", "auth": "none", "response_schema": "user"},
+    {"id": "EP-033", "method": "POST", "path": "/users", "resource": "users", "type": "create", "auth": "none", "request_body": {"name": "string", "username": "string", "email": "string"}, "response_schema": "user"},
+    {"id": "EP-034", "method": "PUT", "path": "/users/:id", "resource": "users", "type": "replace", "auth": "none", "request_body": {"name": "string", "username": "string", "email": "string"}, "response_schema": "user"},
+    {"id": "EP-035", "method": "PATCH", "path": "/users/:id", "resource": "users", "type": "update", "auth": "none", "request_body": "partial<user>", "response_schema": "user"},
+    {"id": "EP-036", "method": "DELETE", "path": "/users/:id", "resource": "users", "type": "delete", "auth": "none", "response_schema": "{}"},
+
+    {"id": "EP-037", "method": "GET", "path": "/posts/:id/comments", "resource": "posts>comments", "type": "nested_list", "auth": "none", "response_schema": "comment[]"},
+    {"id": "EP-038", "method": "GET", "path": "/albums/:id/photos", "resource": "albums>photos", "type": "nested_list", "auth": "none", "response_schema": "photo[]"},
+    {"id": "EP-039", "method": "GET", "path": "/users/:id/posts", "resource": "users>posts", "type": "nested_list", "auth": "none", "response_schema": "post[]"},
+    {"id": "EP-040", "method": "GET", "path": "/users/:id/albums", "resource": "users>albums", "type": "nested_list", "auth": "none", "response_schema": "album[]"},
+    {"id": "EP-041", "method": "GET", "path": "/users/:id/todos", "resource": "users>todos", "type": "nested_list", "auth": "none", "response_schema": "todo[]"}
+  ]
+}

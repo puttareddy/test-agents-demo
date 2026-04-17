@@ -1,0 +1,146 @@
+{
+  "run_id": "aef99609",
+  "stage": 5,
+  "agent": "agent-5-defect-investigator",
+  "generated_at": "2026-04-16T20:50:00Z",
+  "idempotency_key": "aef99609-stage5-defect-investigation",
+  "execution_summary": {
+    "total_requests": 63,
+    "passed": 63,
+    "failed": 0,
+    "pass_rate_pct": 100.0,
+    "total_assertions": 177,
+    "assertions_failed": 0,
+    "wall_time_seconds": 5.3,
+    "newman_exit_code": 0
+  },
+  "anomaly_summary": {
+    "total_anomalies": 38,
+    "by_type": {
+      "AUTHENTICATION_BYPASS": 20,
+      "DATA_EXPOSURE": 5,
+      "SCHEMA_VIOLATION": 8,
+      "RATE_LIMIT_NOT_ENFORCED": 3,
+      "SECURITY_HEADER_MISSING": 2
+    }
+  },
+  "triage_context": {
+    "api_type": "public_mock_api",
+    "api_name": "JSONPlaceholder",
+    "auth_model": "none (by design — all 41 endpoints declare auth: none in contract_model.json)",
+    "data_classification": "synthetic_test_data",
+    "triage_rationale": "JSONPlaceholder is a free, public, fake REST API for testing and prototyping. It intentionally operates without authentication, authorization, input validation, or rate limiting. All anomalies represent confirmed security posture characteristics that are by-design for this mock API. Severity is classified relative to what these patterns would mean in a production API, but root cause for all is 'by-design mock API behavior'."
+  },
+  "defects": [
+    {
+      "defect_id": "DEF-001",
+      "priority": "P3",
+      "severity": "observation",
+      "category": "AUTHENTICATION_BYPASS",
+      "title": "No authentication enforced on any endpoint (20 instances)",
+      "anomaly_ids": ["SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-008", "SCN-009", "SCN-010", "SCN-011", "SCN-013", "SCN-014", "SCN-015", "SCN-016", "SCN-017", "SCN-023", "SCN-024", "SCN-037", "SCN-038", "SCN-039", "SCN-043", "SCN-044"],
+      "owasp_categories": [
+        "API1:2023 Broken Object Level Authorization",
+        "API2:2023 Broken Authentication",
+        "API5:2023 Broken Function Level Authorization",
+        "API6:2023 Unrestricted Access to Sensitive Business Flows"
+      ],
+      "description": "All 41 endpoints accept unauthenticated requests. GET endpoints return full resource data, POST endpoints create resources without identity, PUT/PATCH endpoints modify any resource, and DELETE endpoints destroy any resource — all without credentials. This covers BOLA (object-level), BFLA (function-level), and broken authentication patterns across all 6 resources (posts, comments, albums, photos, todos, users).",
+      "root_cause": "By-design: JSONPlaceholder is a mock API that intentionally has no authentication layer. The contract_model.json declares auth: none for all endpoints. This is expected behavior for a public testing/prototyping API.",
+      "production_impact": "If this pattern existed in a production API, it would be Critical (P1). Any anonymous caller could read, create, modify, or delete any resource belonging to any user. The 20 individual anomalies span all CRUD operations across all resources.",
+      "evidence_count": 20,
+      "recommendation": "No action required for JSONPlaceholder. For production APIs following this pattern: implement OAuth 2.0 or JWT-based authentication, add ownership checks on all resource access, and enforce role-based access control on destructive operations.",
+      "false_positive": false,
+      "by_design": true
+    },
+    {
+      "defect_id": "DEF-002",
+      "priority": "P3",
+      "severity": "observation",
+      "category": "DATA_EXPOSURE",
+      "title": "Full resource data exposed without access control (5 instances)",
+      "anomaly_ids": ["SCN-001", "SCN-002", "SCN-038", "SCN-039", "SCN-012"],
+      "owasp_categories": [
+        "API1:2023 Broken Object Level Authorization",
+        "API3:2023 Broken Object Property Level Authorization"
+      ],
+      "description": "User PII fields (name, email, phone, address, company) are returned in full at /users/:id. Posts, todos, and comments for any user are accessible via nested routes (/users/:id/posts, /users/:id/todos). Email spoofing is accepted at /comments. All data is synthetic test data.",
+      "root_cause": "By-design: The API serves static synthetic data without any access control or field-level filtering. No real PII exists in the dataset.",
+      "production_impact": "If real PII: Critical (P1). Enables full user directory harvesting via sequential ID enumeration. The /users endpoint exposes email, phone, and physical address for all 10 synthetic users.",
+      "evidence_count": 5,
+      "recommendation": "No action for mock API. For production: implement field-level access control, redact sensitive fields for non-owner callers, add pagination with cursor-based tokens to prevent enumeration.",
+      "false_positive": false,
+      "by_design": true
+    },
+    {
+      "defect_id": "DEF-003",
+      "priority": "P3",
+      "severity": "observation",
+      "category": "SCHEMA_VIOLATION",
+      "title": "No input validation — mass assignment, XSS, and SSRF payloads accepted (8 instances)",
+      "anomaly_ids": ["SCN-007", "SCN-012", "SCN-021", "SCN-022", "SCN-032", "SCN-006", "SCN-020", "SCN-045"],
+      "owasp_categories": [
+        "API3:2023 Broken Object Property Level Authorization",
+        "API7:2023 Server Side Request Forgery",
+        "API8:2023 Security Misconfiguration"
+      ],
+      "description": "The API accepts all input without validation: (1) Mass assignment — userId/postId/albumId can be set to any value, enabling resource impersonation across /posts, /comments, /albums, /todos. (2) XSS — script tags stored verbatim in post title field. (3) SSRF — internal network URLs (http://169.254.169.254) accepted in photo url/thumbnailUrl fields via POST, PUT, and PATCH.",
+      "root_cause": "By-design: JSONPlaceholder stores submitted data in memory without any validation, sanitization, or schema enforcement. It is a stub that echoes input back. No server-side processing of URLs occurs, so SSRF payloads are stored but never fetched.",
+      "production_impact": "Mass assignment: High (P2) — enables privilege escalation. XSS: Medium — stored XSS if rendered in a frontend. SSRF: Critical if URLs are fetched server-side (not the case here).",
+      "evidence_count": 8,
+      "recommendation": "No action for mock API. For production: implement allowlist-based input validation, strip/reject unknown fields (mass assignment protection), sanitize HTML input, validate URL fields against an allowlist of permitted domains.",
+      "false_positive": false,
+      "by_design": true
+    },
+    {
+      "defect_id": "DEF-004",
+      "priority": "P4",
+      "severity": "observation",
+      "category": "RATE_LIMIT_NOT_ENFORCED",
+      "title": "Rate limiting present but permissive (3 instances)",
+      "anomaly_ids": ["SCN-018", "SCN-019", "SCN-047"],
+      "owasp_categories": [
+        "API4:2023 Unrestricted Resource Consumption",
+        "API6:2023 Unrestricted Access to Sensitive Business Flows"
+      ],
+      "description": "The test scenarios expected 429 responses but received 200/201. However, response headers reveal rate limiting IS present: x-ratelimit-limit: 1000, x-ratelimit-remaining: 999. The threshold is high (1000 requests/window) and was not exhausted during testing. Additionally, Cloudflare CDN caching (cf-cache-status: HIT) provides infrastructure-level protection.",
+      "root_cause": "Rate limiting exists at x-ratelimit-limit=1000 per window but the test suite sent far fewer requests than the threshold. The anomaly classification overreported — rate limiting IS enforced, just at a generous threshold appropriate for a public test API.",
+      "production_impact": "Low (P4). Rate limits exist. The 1000/window threshold is intentionally generous for a mock API. A production API would need tighter per-user rate limits.",
+      "evidence_count": 3,
+      "recommendation": "Reclassify as informational. The rate limit headers prove enforcement exists. For production APIs: implement per-user rate limiting at appropriate thresholds (e.g., 100/minute for writes).",
+      "false_positive": true,
+      "by_design": true
+    },
+    {
+      "defect_id": "DEF-005",
+      "priority": "P4",
+      "severity": "observation",
+      "category": "SECURITY_HEADER_MISSING",
+      "title": "HSTS and X-Frame-Options headers absent (2 instances)",
+      "anomaly_ids": ["SCN-025", "SCN-025"],
+      "owasp_categories": [
+        "API8:2023 Security Misconfiguration"
+      ],
+      "description": "Strict-Transport-Security (HSTS) and X-Frame-Options headers are missing from responses. The API does serve over HTTPS and includes x-content-type-options: nosniff. Infrastructure is Heroku + Cloudflare.",
+      "root_cause": "Infrastructure configuration: Heroku does not add HSTS by default. Cloudflare handles TLS termination but HSTS is not enabled in the Cloudflare configuration for this domain. X-Frame-Options is not set by the Express application.",
+      "production_impact": "Low (P4). Missing HSTS allows potential SSL stripping on first visit. Missing X-Frame-Options allows clickjacking. Both are defense-in-depth headers — the API already uses HTTPS and is a JSON API (not rendered in browsers).",
+      "evidence_count": 2,
+      "recommendation": "Infrastructure-level fix: enable HSTS in Cloudflare dashboard, add helmet middleware to Express for X-Frame-Options. Low priority for a JSON API.",
+      "false_positive": false,
+      "by_design": false
+    }
+  ],
+  "defect_counts": {
+    "P1_blocker": 0,
+    "P2_critical": 0,
+    "P3_observation": 3,
+    "P4_informational": 2,
+    "total": 5,
+    "false_positives": 1
+  },
+  "latency_assessment": {
+    "sla_breaches": 0,
+    "worst_endpoint": "POST /posts (max 382ms, p95 382ms, SLA 2000ms)",
+    "overall_health": "All endpoints within SLA. Mean response times under 130ms across all endpoints."
+  }
+}

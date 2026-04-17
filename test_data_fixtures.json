@@ -1,0 +1,218 @@
+{
+  "run_id": "9c9e1b6f",
+  "generated_at": "2026-04-16T21:30:00Z",
+  "fixtures": {
+    "posts": {
+      "valid_create": {
+        "userId": 1,
+        "title": "Test Post Title for Run aef99609",
+        "body": "This is a synthetic test post body for automated testing."
+      },
+      "valid_update_full": {
+        "userId": 1,
+        "title": "Updated Post Title aef99609",
+        "body": "Updated body content for full replacement test."
+      },
+      "valid_update_partial": {
+        "title": "Patched Title aef99609"
+      },
+      "empty_body": {},
+      "wrong_type_userId": {
+        "userId": "not_a_number",
+        "title": "Type coercion test",
+        "body": "Should reject string userId."
+      },
+      "xss_payload": {
+        "userId": 1,
+        "title": "<script>alert('xss')</script>",
+        "body": "<img src=x onerror=alert('xss')>"
+      },
+      "mass_assignment_extra_fields": {
+        "userId": 1,
+        "title": "Mass assignment probe",
+        "body": "Testing extra fields",
+        "isAdmin": true,
+        "role": "admin",
+        "permissions": [
+          "read",
+          "write",
+          "delete"
+        ]
+      },
+      "oversized_body": {
+        "userId": 1,
+        "title": "Oversized payload test",
+        "body": "PLACEHOLDER_1MB"
+      },
+      "impersonation": {
+        "userId": 999,
+        "title": "Impersonation test post",
+        "body": "Created with arbitrary userId."
+      },
+      "bola_put_ownership_transfer": {
+        "userId": 99,
+        "title": "Ownership transfer via PUT",
+        "body": "Reassigned ownership without auth."
+      },
+      "bola_patch_content_alter": {
+        "title": "Hacked title via PATCH"
+      }
+    },
+    "comments": {
+      "valid_create": {
+        "postId": 1,
+        "name": "Test Commenter",
+        "email": "testcommenter@syntheticmail.test",
+        "body": "This is a synthetic test comment."
+      },
+      "spoofed_email": {
+        "postId": 1,
+        "name": "Spoofed Commenter",
+        "email": "ceo@synthetic-company.test",
+        "body": "Comment with impersonated email."
+      },
+      "crlf_injection_email": {
+        "postId": 1,
+        "name": "CRLF Tester",
+        "email": "test@syntheticmail.test\r\nBcc: victim@syntheticmail.test",
+        "body": "Email field CRLF injection test."
+      },
+      "valid_update_full": {
+        "postId": 1,
+        "name": "Updated Commenter",
+        "email": "updated@syntheticmail.test",
+        "body": "Updated comment body."
+      },
+      "bola_put_replace": {
+        "postId": 99,
+        "name": "Attacker Comment",
+        "email": "attacker@syntheticmail.test",
+        "body": "Replaced comment without auth."
+      },
+      "valid_get_single": {
+        "description": "Expected for GET /comments/1",
+        "expected_id": 1
+      },
+      "bola_patch_body": {
+        "body": "Altered by attacker via PATCH"
+      }
+    },
+    "albums": {
+      "valid_create": {
+        "userId": 1,
+        "title": "Test Album aef99609"
+      },
+      "impersonation": {
+        "userId": 5,
+        "title": "Album created for another user"
+      },
+      "bola_put_reassign": {
+        "userId": 99,
+        "title": "Album ownership reassigned"
+      },
+      "valid_get_single": {
+        "description": "Expected for GET /albums/1",
+        "expected_id": 1
+      },
+      "bola_patch_title": {
+        "title": "Hijacked Album Title via PATCH"
+      }
+    },
+    "photos": {
+      "valid_create": {
+        "albumId": 1,
+        "title": "Test Photo aef99609",
+        "url": "https://via.placeholder.com/600/test-aef99609",
+        "thumbnailUrl": "https://via.placeholder.com/150/test-aef99609"
+      },
+      "ssrf_create": {
+        "albumId": 1,
+        "title": "SSRF probe photo",
+        "url": "http://169.254.169.254/latest/meta-data/",
+        "thumbnailUrl": "http://localhost:8080/admin"
+      },
+      "ssrf_put_replace": {
+        "albumId": 1,
+        "title": "SSRF via PUT",
+        "url": "http://localhost:3000/admin",
+        "thumbnailUrl": "http://10.0.0.1:8080/internal"
+      },
+      "ssrf_patch_thumbnail": {
+        "thumbnailUrl": "http://10.0.0.1:8080/"
+      },
+      "valid_get_single": {
+        "description": "Expected for GET /photos/1",
+        "expected_id": 1
+      }
+    },
+    "todos": {
+      "valid_create": {
+        "userId": 1,
+        "title": "Test Todo aef99609",
+        "completed": false
+      },
+      "impersonation": {
+        "userId": 5,
+        "title": "Todo assigned to another user",
+        "completed": false
+      },
+      "bola_put_reassign": {
+        "userId": 99,
+        "title": "Todo ownership reassigned",
+        "completed": true
+      },
+      "bola_patch_toggle": {
+        "completed": true
+      },
+      "valid_get_single": {
+        "description": "Expected for GET /todos/1",
+        "expected_id": 1,
+        "expected_completed": false
+      }
+    },
+    "users": {
+      "valid_create": {
+        "name": "Synthetic Test User",
+        "username": "synthetictester_aef99609",
+        "email": "synthetic.tester@testmail.test"
+      },
+      "bola_put_replace": {
+        "name": "Attacker Replaced User",
+        "username": "attacker_replaced",
+        "email": "attacker@syntheticmail.test"
+      },
+      "bola_patch_email": {
+        "email": "attacker@evil.test"
+      }
+    },
+    "security_payloads": {
+      "sql_injection_id": "1 OR 1=1",
+      "sql_injection_string": "'; DROP TABLE posts; --",
+      "xss_script_tag": "<script>alert('xss')</script>",
+      "xss_img_onerror": "<img src=x onerror=alert(1)>",
+      "xss_svg_onload": "<svg onload=alert(1)>",
+      "path_traversal": "../../../etc/passwd",
+      "null_byte_injection": "test%00.json",
+      "unicode_overflow": "\uffff\ufffe\ufffd",
+      "ssrf_aws_metadata": "http://169.254.169.254/latest/meta-data/",
+      "ssrf_localhost": "http://localhost:8080/admin",
+      "ssrf_internal_ip": "http://10.0.0.1:8080/"
+    },
+    "boundary_values": {
+      "id_zero": 0,
+      "id_negative": -1,
+      "id_max_safe_integer": 999999999999,
+      "id_string": "abc",
+      "id_nonexistent": 999999,
+      "empty_string": "",
+      "null_value": null,
+      "max_length_string_1kb": "A repeated string for boundary testing that is exactly one kilobyte in length when repeated enough times to fill the buffer and test maximum field length handling by the API server."
+    },
+    "users_albums_nested": {
+      "valid_get": {
+        "description": "GET /users/1/albums",
+        "expected_userId": 1
+      }
+    }
+  }
+}

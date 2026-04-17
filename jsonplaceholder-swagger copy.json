@@ -1,0 +1,1804 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "JSONPlaceholder API",
+      "description": "Free fake and reliable REST API for testing and prototyping. Powered by JSON Server + LowDB. All HTTP methods are supported. Note: POST/PUT/PATCH/DELETE requests do not persist data — responses simulate success but the server state is not actually mutated.\n",
+      "version": "1.0.0",
+      "contact": {
+        "name": "typicode",
+        "url": "https://jsonplaceholder.typicode.com"
+      },
+      "license": {
+        "name": "MIT"
+      }
+    },
+    "servers": [
+      {
+        "url": "https://jsonplaceholder.typicode.com",
+        "description": "Production server"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Posts",
+        "description": "100 posts"
+      },
+      {
+        "name": "Comments",
+        "description": "500 comments"
+      },
+      {
+        "name": "Albums",
+        "description": "100 albums"
+      },
+      {
+        "name": "Photos",
+        "description": "5000 photos"
+      },
+      {
+        "name": "Todos",
+        "description": "200 todos"
+      },
+      {
+        "name": "Users",
+        "description": "10 users"
+      }
+    ],
+    "paths": {
+      "/posts": {
+        "get": {
+          "tags": [
+            "Posts"
+          ],
+          "summary": "List all posts",
+          "operationId": "listPosts",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/userId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of posts",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Post"
+                    }
+                  },
+                  "example": [
+                    {
+                      "userId": 1,
+                      "id": 1,
+                      "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+                      "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Posts"
+          ],
+          "summary": "Create a post",
+          "operationId": "createPost",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created post (id is auto-assigned as 101)",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/posts/{id}": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Posts"
+          ],
+          "summary": "Get a post by ID",
+          "operationId": "getPost",
+          "responses": {
+            "200": {
+              "description": "A single post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Posts"
+          ],
+          "summary": "Replace a post",
+          "operationId": "replacePost",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Updated post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Posts"
+          ],
+          "summary": "Partially update a post",
+          "operationId": "patchPost",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostPatch"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Patched post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Posts"
+          ],
+          "summary": "Delete a post",
+          "operationId": "deletePost",
+          "responses": {
+            "200": {
+              "description": "Empty object returned on success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        }
+      },
+      "/posts/{id}/comments": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Posts",
+            "Comments"
+          ],
+          "summary": "List comments for a post",
+          "operationId": "listCommentsByPost",
+          "responses": {
+            "200": {
+              "description": "Comments belonging to the specified post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Comment"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        }
+      },
+      "/comments": {
+        "get": {
+          "tags": [
+            "Comments"
+          ],
+          "summary": "List all comments",
+          "operationId": "listComments",
+          "parameters": [
+            {
+              "name": "postId",
+              "in": "query",
+              "description": "Filter comments by post ID",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of comments",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Comment"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Comments"
+          ],
+          "summary": "Create a comment",
+          "operationId": "createComment",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created comment",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/comments/{id}": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Comments"
+          ],
+          "summary": "Get a comment by ID",
+          "operationId": "getComment",
+          "responses": {
+            "200": {
+              "description": "A single comment",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Comments"
+          ],
+          "summary": "Replace a comment",
+          "operationId": "replaceComment",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Updated comment",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Comments"
+          ],
+          "summary": "Partially update a comment",
+          "operationId": "patchComment",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentPatch"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Patched comment",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Comments"
+          ],
+          "summary": "Delete a comment",
+          "operationId": "deleteComment",
+          "responses": {
+            "200": {
+              "description": "Empty object returned on success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/albums": {
+        "get": {
+          "tags": [
+            "Albums"
+          ],
+          "summary": "List all albums",
+          "operationId": "listAlbums",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/userId"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of albums",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Album"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Albums"
+          ],
+          "summary": "Create an album",
+          "operationId": "createAlbum",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created album",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Album"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/albums/{id}": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Albums"
+          ],
+          "summary": "Get an album by ID",
+          "operationId": "getAlbum",
+          "responses": {
+            "200": {
+              "description": "A single album",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Album"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Albums"
+          ],
+          "summary": "Replace an album",
+          "operationId": "replaceAlbum",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Updated album",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Album"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Albums"
+          ],
+          "summary": "Partially update an album",
+          "operationId": "patchAlbum",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumPatch"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Patched album",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Album"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Albums"
+          ],
+          "summary": "Delete an album",
+          "operationId": "deleteAlbum",
+          "responses": {
+            "200": {
+              "description": "Empty object returned on success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/albums/{id}/photos": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Albums",
+            "Photos"
+          ],
+          "summary": "List photos for an album",
+          "operationId": "listPhotosByAlbum",
+          "responses": {
+            "200": {
+              "description": "Photos belonging to the specified album",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Photo"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/photos": {
+        "get": {
+          "tags": [
+            "Photos"
+          ],
+          "summary": "List all photos",
+          "operationId": "listPhotos",
+          "parameters": [
+            {
+              "name": "albumId",
+              "in": "query",
+              "description": "Filter photos by album ID",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of photos",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Photo"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Photos"
+          ],
+          "summary": "Create a photo",
+          "operationId": "createPhoto",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created photo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Photo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/photos/{id}": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Photos"
+          ],
+          "summary": "Get a photo by ID",
+          "operationId": "getPhoto",
+          "responses": {
+            "200": {
+              "description": "A single photo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Photo"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Photos"
+          ],
+          "summary": "Replace a photo",
+          "operationId": "replacePhoto",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Updated photo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Photo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Photos"
+          ],
+          "summary": "Partially update a photo",
+          "operationId": "patchPhoto",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoPatch"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Patched photo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Photo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Photos"
+          ],
+          "summary": "Delete a photo",
+          "operationId": "deletePhoto",
+          "responses": {
+            "200": {
+              "description": "Empty object returned on success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/todos": {
+        "get": {
+          "tags": [
+            "Todos"
+          ],
+          "summary": "List all todos",
+          "operationId": "listTodos",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/userId"
+            },
+            {
+              "name": "completed",
+              "in": "query",
+              "description": "Filter todos by completion status",
+              "required": false,
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of todos",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Todo"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Todos"
+          ],
+          "summary": "Create a todo",
+          "operationId": "createTodo",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created todo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Todo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/todos/{id}": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Todos"
+          ],
+          "summary": "Get a todo by ID",
+          "operationId": "getTodo",
+          "responses": {
+            "200": {
+              "description": "A single todo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Todo"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Todos"
+          ],
+          "summary": "Replace a todo",
+          "operationId": "replaceTodo",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Updated todo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Todo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Todos"
+          ],
+          "summary": "Partially update a todo",
+          "operationId": "patchTodo",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodoPatch"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Patched todo",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Todo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Todos"
+          ],
+          "summary": "Delete a todo",
+          "operationId": "deleteTodo",
+          "responses": {
+            "200": {
+              "description": "Empty object returned on success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "List all users",
+          "operationId": "listUsers",
+          "responses": {
+            "200": {
+              "description": "A list of users",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Create a user",
+          "operationId": "createUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Get a user by ID",
+          "operationId": "getUser",
+          "responses": {
+            "200": {
+              "description": "A single user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Replace a user",
+          "operationId": "replaceUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Updated user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Partially update a user",
+          "operationId": "patchUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPatch"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Patched user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Delete a user",
+          "operationId": "deleteUser",
+          "responses": {
+            "200": {
+              "description": "Empty object returned on success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{id}/albums": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Users",
+            "Albums"
+          ],
+          "summary": "List albums for a user",
+          "operationId": "listAlbumsByUser",
+          "responses": {
+            "200": {
+              "description": "Albums belonging to the specified user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Album"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{id}/todos": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Users",
+            "Todos"
+          ],
+          "summary": "List todos for a user",
+          "operationId": "listTodosByUser",
+          "responses": {
+            "200": {
+              "description": "Todos belonging to the specified user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Todo"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{id}/posts": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Users",
+            "Posts"
+          ],
+          "summary": "List posts for a user",
+          "operationId": "listPostsByUser",
+          "responses": {
+            "200": {
+              "description": "Posts authored by the specified user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Post"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "parameters": {
+        "id": {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "Resource identifier",
+          "schema": {
+            "type": "integer",
+            "example": 1
+          }
+        },
+        "userId": {
+          "name": "userId",
+          "in": "query",
+          "required": false,
+          "description": "Filter by user ID",
+          "schema": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "responses": {
+        "NotFound": {
+          "description": "Resource not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {}
+              }
+            }
+          }
+        }
+      },
+      "schemas": {
+        "Post": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "description": "ID of the user who authored the post",
+              "example": 1
+            },
+            "id": {
+              "type": "integer",
+              "description": "Unique post identifier",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "description": "Title of the post",
+              "example": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
+            },
+            "body": {
+              "type": "string",
+              "description": "Body text of the post",
+              "example": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum"
+            }
+          },
+          "required": [
+            "userId",
+            "id",
+            "title",
+            "body"
+          ]
+        },
+        "PostInput": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "example": "My new post"
+            },
+            "body": {
+              "type": "string",
+              "example": "This is the body of the post."
+            }
+          },
+          "required": [
+            "userId",
+            "title",
+            "body"
+          ]
+        },
+        "PostPatch": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          }
+        },
+        "Comment": {
+          "type": "object",
+          "properties": {
+            "postId": {
+              "type": "integer",
+              "description": "ID of the post this comment belongs to",
+              "example": 1
+            },
+            "id": {
+              "type": "integer",
+              "description": "Unique comment identifier",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "description": "Name/subject of the comment",
+              "example": "id labore ex et quam laborum"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "Email of the commenter",
+              "example": "Eliseo@gardner.biz"
+            },
+            "body": {
+              "type": "string",
+              "description": "Body text of the comment",
+              "example": "laudantium enim quasi est quidem magnam voluptate ipsam eos"
+            }
+          },
+          "required": [
+            "postId",
+            "id",
+            "name",
+            "email",
+            "body"
+          ]
+        },
+        "CommentInput": {
+          "type": "object",
+          "properties": {
+            "postId": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "My comment"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "user@example.com"
+            },
+            "body": {
+              "type": "string",
+              "example": "This is a comment body."
+            }
+          },
+          "required": [
+            "postId",
+            "name",
+            "email",
+            "body"
+          ]
+        },
+        "CommentPatch": {
+          "type": "object",
+          "properties": {
+            "postId": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "body": {
+              "type": "string"
+            }
+          }
+        },
+        "Album": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "description": "ID of the user who owns the album",
+              "example": 1
+            },
+            "id": {
+              "type": "integer",
+              "description": "Unique album identifier",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "description": "Title of the album",
+              "example": "quidem molestiae enim"
+            }
+          },
+          "required": [
+            "userId",
+            "id",
+            "title"
+          ]
+        },
+        "AlbumInput": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "example": "My new album"
+            }
+          },
+          "required": [
+            "userId",
+            "title"
+          ]
+        },
+        "AlbumPatch": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "Photo": {
+          "type": "object",
+          "properties": {
+            "albumId": {
+              "type": "integer",
+              "description": "ID of the album this photo belongs to",
+              "example": 1
+            },
+            "id": {
+              "type": "integer",
+              "description": "Unique photo identifier",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "description": "Title of the photo",
+              "example": "accusamus beatae ad facilis cum similique qui sunt"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Full-size photo URL",
+              "example": "https://via.placeholder.com/600/92c952"
+            },
+            "thumbnailUrl": {
+              "type": "string",
+              "format": "uri",
+              "description": "Thumbnail photo URL",
+              "example": "https://via.placeholder.com/150/92c952"
+            }
+          },
+          "required": [
+            "albumId",
+            "id",
+            "title",
+            "url",
+            "thumbnailUrl"
+          ]
+        },
+        "PhotoInput": {
+          "type": "object",
+          "properties": {
+            "albumId": {
+              "type": "integer",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "example": "My new photo"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "example": "https://via.placeholder.com/600/abc123"
+            },
+            "thumbnailUrl": {
+              "type": "string",
+              "format": "uri",
+              "example": "https://via.placeholder.com/150/abc123"
+            }
+          },
+          "required": [
+            "albumId",
+            "title",
+            "url",
+            "thumbnailUrl"
+          ]
+        },
+        "PhotoPatch": {
+          "type": "object",
+          "properties": {
+            "albumId": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "thumbnailUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "Todo": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "description": "ID of the user this todo belongs to",
+              "example": 1
+            },
+            "id": {
+              "type": "integer",
+              "description": "Unique todo identifier",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "description": "Description of the task",
+              "example": "delectus aut autem"
+            },
+            "completed": {
+              "type": "boolean",
+              "description": "Whether the task has been completed",
+              "example": false
+            }
+          },
+          "required": [
+            "userId",
+            "id",
+            "title",
+            "completed"
+          ]
+        },
+        "TodoInput": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "example": "Buy groceries"
+            },
+            "completed": {
+              "type": "boolean",
+              "example": false
+            }
+          },
+          "required": [
+            "userId",
+            "title",
+            "completed"
+          ]
+        },
+        "TodoPatch": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "completed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "Geo": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "string",
+              "description": "Latitude",
+              "example": "-37.3159"
+            },
+            "lng": {
+              "type": "string",
+              "description": "Longitude",
+              "example": "81.1496"
+            }
+          },
+          "required": [
+            "lat",
+            "lng"
+          ]
+        },
+        "Address": {
+          "type": "object",
+          "properties": {
+            "street": {
+              "type": "string",
+              "example": "Kulas Light"
+            },
+            "suite": {
+              "type": "string",
+              "example": "Apt. 556"
+            },
+            "city": {
+              "type": "string",
+              "example": "Gwenborough"
+            },
+            "zipcode": {
+              "type": "string",
+              "example": "92998-3874"
+            },
+            "geo": {
+              "$ref": "#/components/schemas/Geo"
+            }
+          },
+          "required": [
+            "street",
+            "suite",
+            "city",
+            "zipcode",
+            "geo"
+          ]
+        },
+        "Company": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Romaguera-Crona"
+            },
+            "catchPhrase": {
+              "type": "string",
+              "example": "Multi-layered client-server neural-net"
+            },
+            "bs": {
+              "type": "string",
+              "description": "Business strategy tagline",
+              "example": "harness real-time e-markets"
+            }
+          },
+          "required": [
+            "name",
+            "catchPhrase",
+            "bs"
+          ]
+        },
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "Unique user identifier",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "description": "Full name",
+              "example": "Leanne Graham"
+            },
+            "username": {
+              "type": "string",
+              "description": "Username / handle",
+              "example": "Bret"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "Sincere@april.biz"
+            },
+            "address": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "phone": {
+              "type": "string",
+              "example": "1-770-736-8031 x56442"
+            },
+            "website": {
+              "type": "string",
+              "example": "hildegard.org"
+            },
+            "company": {
+              "$ref": "#/components/schemas/Company"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "username",
+            "email",
+            "address",
+            "phone",
+            "website",
+            "company"
+          ]
+        },
+        "UserInput": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "username": {
+              "type": "string",
+              "example": "johndoe"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "john@example.com"
+            },
+            "address": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "phone": {
+              "type": "string",
+              "example": "555-1234"
+            },
+            "website": {
+              "type": "string",
+              "example": "johndoe.com"
+            },
+            "company": {
+              "$ref": "#/components/schemas/Company"
+            }
+          },
+          "required": [
+            "name",
+            "username",
+            "email"
+          ]
+        },
+        "UserPatch": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "address": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "website": {
+              "type": "string"
+            },
+            "company": {
+              "$ref": "#/components/schemas/Company"
+            }
+          }
+        }
+      }
+    }
+  }

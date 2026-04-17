@@ -1,0 +1,80 @@
+{
+  "run_id": "aef99609",
+  "stage": 5,
+  "agent": "agent-5-defect-investigator",
+  "generated_at": "2026-04-16T20:50:00Z",
+  "tickets": [
+    {
+      "ticket_id": "DRAFT-001",
+      "defect_id": "DEF-001",
+      "type": "Security Observation",
+      "priority": "P3",
+      "summary": "[JSONPlaceholder] No authentication on any endpoint — 20 BOLA/BFLA/auth-bypass observations",
+      "description": "## Summary\nAll 41 JSONPlaceholder endpoints accept unauthenticated requests. 20 security test scenarios confirmed that GET, POST, PUT, PATCH, and DELETE operations succeed without any credentials across all 6 resources (posts, comments, albums, photos, todos, users).\n\n## Root Cause\nBy-design: JSONPlaceholder is a public mock API with no authentication layer. Contract model declares `auth: none` for all endpoints.\n\n## OWASP Categories\n- API1:2023 Broken Object Level Authorization\n- API2:2023 Broken Authentication\n- API5:2023 Broken Function Level Authorization\n- API6:2023 Unrestricted Access to Sensitive Business Flows\n\n## Evidence\n- 20 anomalies across SCN-001 through SCN-044\n- All returned HTTP 200/201 where 401/403 was probed\n- Covers CRUD operations on all resource types\n\n## Recommendation\nNo action for mock API. Document as baseline security posture. If adapting this API pattern for production, implement OAuth 2.0/JWT auth, ownership checks, and RBAC.",
+      "labels": ["security", "by-design", "observation", "OWASP-API1", "OWASP-API2", "OWASP-API5"],
+      "components": ["api-security"],
+      "affects_versions": ["jsonplaceholder-v1"],
+      "story_points": 0
+    },
+    {
+      "ticket_id": "DRAFT-002",
+      "defect_id": "DEF-002",
+      "type": "Security Observation",
+      "priority": "P3",
+      "summary": "[JSONPlaceholder] User PII and resource data exposed without access control — 5 data exposure findings",
+      "description": "## Summary\n5 anomalies confirm that user PII (name, email, phone, address) and resource data (posts, todos) are accessible to any caller without access control. Nested routes enable cross-user data enumeration.\n\n## Root Cause\nBy-design: The API serves static synthetic test data without access control or field-level filtering.\n\n## OWASP Categories\n- API1:2023 Broken Object Level Authorization\n- API3:2023 Broken Object Property Level Authorization\n\n## Evidence\n- GET /users/1 returns full PII object (email, phone, address, company)\n- GET /users/1/posts and /users/1/todos expose cross-user data\n- POST /comments accepts spoofed email fields\n\n## Recommendation\nNo action for mock API (synthetic data). For production: implement field-level ACL, redact sensitive fields, use cursor-based pagination.",
+      "labels": ["security", "by-design", "observation", "data-exposure", "OWASP-API1", "OWASP-API3"],
+      "components": ["api-security"],
+      "affects_versions": ["jsonplaceholder-v1"],
+      "story_points": 0
+    },
+    {
+      "ticket_id": "DRAFT-003",
+      "defect_id": "DEF-003",
+      "type": "Security Observation",
+      "priority": "P3",
+      "summary": "[JSONPlaceholder] No input validation — mass assignment, XSS, and SSRF payloads accepted verbatim",
+      "description": "## Summary\n8 anomalies confirm the API accepts all input without validation: mass assignment of userId/postId fields, XSS script tags stored in post titles, and SSRF payloads (internal IPs) stored in photo URL fields.\n\n## Root Cause\nBy-design: JSONPlaceholder echoes submitted data back without schema validation, sanitization, or server-side processing. SSRF payloads are stored but never fetched.\n\n## OWASP Categories\n- API3:2023 Broken Object Property Level Authorization (mass assignment)\n- API7:2023 Server Side Request Forgery (stored URL payloads)\n- API8:2023 Security Misconfiguration (XSS)\n\n## Evidence\n- POST /posts with arbitrary userId → 201 (mass assignment)\n- POST /posts with `<script>alert(1)</script>` in title → 201 (XSS stored)\n- POST /photos with `http://169.254.169.254` in url → 201 (SSRF payload)\n- PUT and PATCH variants also accept payloads\n\n## Recommendation\nNo action for mock API. For production: allowlist input validation, strip unknown fields, sanitize HTML, validate URLs against domain allowlist.",
+      "labels": ["security", "by-design", "observation", "input-validation", "OWASP-API3", "OWASP-API7", "OWASP-API8"],
+      "components": ["api-security"],
+      "affects_versions": ["jsonplaceholder-v1"],
+      "story_points": 0
+    },
+    {
+      "ticket_id": "DRAFT-004",
+      "defect_id": "DEF-004",
+      "type": "Informational",
+      "priority": "P4",
+      "summary": "[JSONPlaceholder] Rate limiting present but generous (1000/window) — 3 false-positive anomalies",
+      "description": "## Summary\n3 anomalies flagged rate limiting as not enforced, but response headers reveal `x-ratelimit-limit: 1000` with `x-ratelimit-remaining: 999`. Rate limiting IS active but the threshold was not reached during testing.\n\n## Root Cause\nFalse positive in anomaly detection. Rate limit headers prove enforcement exists. The 1000/window threshold is intentionally generous for a public test API.\n\n## Evidence\n- Response headers: `x-ratelimit-limit: 1000`, `x-ratelimit-remaining: 999`\n- Cloudflare CDN (cf-cache-status: HIT) provides additional infrastructure protection\n- Test suite sent ~63 requests, far below the 1000 threshold\n\n## Recommendation\nReclassify as false positive. No action needed.",
+      "labels": ["false-positive", "informational", "rate-limiting"],
+      "components": ["api-infrastructure"],
+      "affects_versions": ["jsonplaceholder-v1"],
+      "story_points": 0
+    },
+    {
+      "ticket_id": "DRAFT-005",
+      "defect_id": "DEF-005",
+      "type": "Informational",
+      "priority": "P4",
+      "summary": "[JSONPlaceholder] HSTS and X-Frame-Options security headers missing",
+      "description": "## Summary\nStrict-Transport-Security (HSTS) and X-Frame-Options headers are absent. The API does serve over HTTPS and includes x-content-type-options: nosniff.\n\n## Root Cause\nInfrastructure configuration: Heroku does not add HSTS by default. Express app does not use helmet middleware.\n\n## Evidence\n- Response headers from SCN-025 show no Strict-Transport-Security or X-Frame-Options\n- HTTPS is active, x-content-type-options: nosniff is present\n- Infrastructure: Heroku + Cloudflare + Express\n\n## Recommendation\nLow priority. Enable HSTS in Cloudflare dashboard. Add helmet middleware to Express. These are defense-in-depth headers with minimal impact on a JSON API.",
+      "labels": ["security", "infrastructure", "headers", "OWASP-API8"],
+      "components": ["api-infrastructure"],
+      "affects_versions": ["jsonplaceholder-v1"],
+      "story_points": 1
+    }
+  ],
+  "ticket_summary": {
+    "total_tickets": 5,
+    "by_priority": {
+      "P1": 0,
+      "P2": 0,
+      "P3": 3,
+      "P4": 2
+    },
+    "blocking_tickets": 0,
+    "false_positive_tickets": 1,
+    "total_story_points": 1
+  }
+}
